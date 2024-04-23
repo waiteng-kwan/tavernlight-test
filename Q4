@@ -29,5 +29,6 @@ void Game::addItemToPlayer(const std::string& recipient, uint16_t itemId)
     delete player;
   }
 
-  
+  //if we reach this point, it means the player is online & loaded
+  //assume the player is active so no need to delete from memory
 }
