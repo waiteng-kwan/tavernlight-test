@@ -1,21 +1,33 @@
 void Game::addItemToPlayer(const std::string& recipient, uint16_t itemId)
 {
+  //assuming getPlayerByName does not create a new player object
   Player* player = g_game.getPlayerByName(recipient);
+
+  //create new player if player does not exist
   if (!player) {
     player = new Player(nullptr);
-      if (!IOLoginData::loadPlayerByName(player, recipient)) {
-        return;
-      }
+
+    //if the player is not loaded, then the player object should be cleaned up
+    if (!IOLoginData::loadPlayerByName(player, recipient)) {
+      delete player;
+      return;
+    }
   }
 
+  //assuming this creates a new object
   Item* item = Item::CreateItem(itemId);
+
   if (!item) {
     return;
   }
 
   g_game.internalAddItem(player->getInbox(), item, INDEX_WHEREEVER, FLAG_NOLIMIT);
 
+  //since the player is offline, we have no need to reference the player anymore
   if (player->isOffline()) {
     IOLoginData::savePlayer(player);
+    delete player;
   }
+
+  
 }
