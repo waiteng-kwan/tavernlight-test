@@ -1,10 +1,14 @@
-function do_sth_with_PlayerParty(playerId, membername)
+-- rename function to describe the function content
+function removePlayerPartyMember(playerId, membername)
   player = Player(playerId)
   local party = player:getParty()
+  local members = party:getMembers()
 
-  for k,v in pairs(party:getMembers()) do
-    if v == Player(membername) then
-      party:removeMember(Player(membername))
-    end
+  -- check if member exist
+  if members[membername] ~= nil then
+    --[[ remove member, maybe that function does some internal clean up?
+         although why does the player take in the name when the call above takes id?
+    ]]--
+    party:removeMember(Player(membername))
   end
 end
