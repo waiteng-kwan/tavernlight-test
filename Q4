@@ -7,7 +7,8 @@ void Game::addItemToPlayer(const std::string& recipient, uint16_t itemId)
   if (!player) {
     player = new Player(nullptr);
 
-    //if the player is not loaded, then the player object should be cleaned up
+    //if the player is not loaded, then the player is not valid
+    //object should be cleaned up
     if (!IOLoginData::loadPlayerByName(player, recipient)) {
       delete player;
       return;
@@ -23,12 +24,20 @@ void Game::addItemToPlayer(const std::string& recipient, uint16_t itemId)
 
   g_game.internalAddItem(player->getInbox(), item, INDEX_WHEREEVER, FLAG_NOLIMIT);
 
+  //assuming the internalAddItem adds to an external database, not hold in memory
+  delete item;
+
+  //we want to save the player regardless of online status as the data should not be lost
+  IOLoginData::savePlayer(player);
+  
   //since the player is offline, we have no need to reference the player anymore
   if (player->isOffline()) {
-    IOLoginData::savePlayer(player);
+    //player is saved - assuming to some offline database, so safe to delete
     delete player;
+    return;
   }
 
   //if we reach this point, it means the player is online & loaded
   //assume the player is active so no need to delete from memory
+  //also assuming player will get cleaned up by some kind of player manager
 }
