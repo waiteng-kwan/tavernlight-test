@@ -1,5 +1,5 @@
 -- rename function to describe the function content
-function removePlayerPartyMember(playerId, membername)
+function removeMemberFromParty(playerId, membername)
   player = Player(playerId)
   local party = player:getParty()
   local members = party:getMembers()
