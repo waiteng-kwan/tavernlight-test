@@ -1,10 +1,13 @@
+local releaseEvents = {}
+
 local function releaseStorage(player)
   player:setStorageValue(1000, -1)
 end
 
 function onLogout(player)
-  if player:getStorageValue(1000) == 1 then
-    addEvent(releaseStorage, 1000, player)
+  local id = 1000
+  if player:getStorageValue(id) == 1 then
+    releaseEvents[player] = addEvent(releaseStorage, 1000, player)
   end
   return true
 end
